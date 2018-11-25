@@ -1,0 +1,30 @@
+.main-container{
+    
+    display: flex;
+    justify-content:center;
+}
+
+.center-container {
+    width: 800px;
+    height: 800px;
+    margin: 10px;
+    border: 1px solid #555;
+  }
+  .task-panel{
+    display: flex;
+      max-width: 500px;
+      flex-direction:  column;
+  }
+  .task-container{
+    display: flex;
+    flex-direction:  row;
+    align-items:  baseline;
+  }
+  .task-left{
+      margin :7px;
+      width: 70%;
+  }
+  .task-righ{
+    margin :7px;
+    width: 30%;
+  }

@@ -11,11 +11,13 @@ import { ReactiveFormsModule} from '@angular/forms';
 import { FormsModule } from "@angular/forms";
 
 import { HttpClientModule } from "@angular/common/http";
+import { MainComponent } from './main/main.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    UserLogComponent
+    UserLogComponent,
+    MainComponent
   ],
   imports: [
     BrowserModule,

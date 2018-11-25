@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { NgForm } from "@angular/forms";
 import {HttpService} from './../http.service';
-
-
+import {SessionService} from './../session.service'
 import { Router } from "@angular/router";
 
 import { formArrayNameProvider } from '@angular/forms/src/directives/reactive_directives/form_group_name';
@@ -45,7 +44,8 @@ export class UserLogComponent implements OnInit {
   constructor(
 
     private router: Router,
-    private http: HttpService
+    private http: HttpService,
+    private sessionService : SessionService
 
   ) { }
 
@@ -61,21 +61,26 @@ export class UserLogComponent implements OnInit {
   * Sign in
   */
   onSignIn(): void {
-
-    console.log("s:" + this.email.value.toUpperCase());
-    console.log("s:" + this.password.value);
-    //temporal for hold data
-    var response;
-
-
-    this.http.addUser("my","my").subscribe(data=>{
-      console.log(data);
-    });
-
+         
+    var tempData;
     //check if email/password valid
     if (this.email.valid && this.password.valid) {
 
+      this.http.signin(this.email.value,this.password.value).subscribe(res=>{
+        console.log(res);
+        tempData = res;
 
+        console.log(tempData.success);
+
+        if(tempData.success){
+
+          this.sessionService.login(tempData.token,tempData.userId);
+          
+          this.router.navigate(['todoapp']);
+
+        }
+        
+      });
 
     }//if(this.email.valid)
 
@@ -86,10 +91,13 @@ export class UserLogComponent implements OnInit {
   */
   onSignUp(): void {
 
-    var temp;
+   
 
-    if (this.email.valid && this.password.valid && this.name.valid) {
+    if (this.email.valid && this.password.valid) {
 
+      this.http.addUser(this.email.value,this.password.value).subscribe(res=>{
+        console.log(res);
+      });
       
 
     }

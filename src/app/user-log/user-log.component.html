@@ -21,7 +21,7 @@
       </mat-expansion-panel-header>
 
 
-      <form class="SignInForm" (submit)="onSignIn()">
+      <form class="SignInForm" (submit)="onSignIn()" >
 
         <div class="form-container">
 
@@ -65,28 +65,21 @@
 
       </mat-expansion-panel-header>
 
-      <form class="SignUpForm" (submit)="onSignUp()" #postForm="ngForm">
+      <form class="SignUpForm" (submit)="onSignUp()" >
 
         <div class="form-container">
 
           <mat-form-field>
 
-            <input matInput placeholder="Email address" required [formControl]="email" name="emailIn">
+            <input matInput placeholder="Email address" [formControl]="email" name="emailIn">
             <mat-error *ngIf="email.invalid">{{ getErrorMessageEmail()}}</mat-error>
 
           </mat-form-field>
-
+          
           <mat-form-field>
 
-            <input matInput placeholder="Name" required [formControl]="name" name="name" type="text">
-            <mat-error *ngIf="name.invalid">{{getErrorMessageName()}}</mat-error>
-
-          </mat-form-field>
-
-          <mat-form-field>
-
-            <input matInput placeholder="Create your password" [type]="hide ? 'password' : 'text'" required
-              [formControl]="password" name="password" required>
+            <input matInput placeholder="Create your password" [type]="hide ? 'password' : 'text'" 
+              [formControl]="password" name="password" >
             <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
             <mat-error *ngIf="password.invalid">{{getErrorMessagePassword()}}</mat-error>
 
