@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import {HttpService} from './../http.service';
+import { HttpService } from './../http.service';
 import { Subscriber } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { R3_TEMPLATE_REF_FACTORY__POST_NGCC__ } from '@angular/core/src/ivy_switch/runtime/legacy';
 import { template } from '@angular/core/src/render3';
+import { Task } from './../Models/Task';
 
 @Component({
   selector: 'app-main',
@@ -17,75 +18,121 @@ export class MainComponent implements OnInit {
   lists;
   tasks;
 
+  selectedList = "Create or Select a list";
+  selectedListId = "";
 
-   //values for max min name lengt
-   minNameLength = 1;
-   maxNameLength = 32
-   //Create and add validotes to password Form Control : required,minLength, maxLength
-   name = new FormControl('', [Validators.required, Validators.minLength(this.minNameLength), Validators.maxLength(this.maxNameLength)]);
-  
-   minTaskTitleLength = 1;
-   maxTaskTitleLength = 32;
-   taskTitle = new FormControl('', [Validators.required, Validators.minLength(this.minTaskTitleLength), Validators.maxLength(this.maxTaskTitleLength)]);
+  //values for max min name lengt
+  minNameLength = 1;
+  maxNameLength = 32
+  //Create and add validotes to password Form Control : required,minLength, maxLength
+  name = new FormControl('', [Validators.required, Validators.minLength(this.minNameLength), Validators.maxLength(this.maxNameLength)]);
 
-   minTaskBodyLength = 1;
-   maxTaskBodyLength = 64;
-   taskBody =  new FormControl('', [Validators.minLength(this.minTaskBodyLength), Validators.maxLength(this.maxTaskBodyLength)]);
+  minTaskTitleLength = 1;
+  maxTaskTitleLength = 32;
+  taskTitle = new FormControl('', [Validators.required, Validators.minLength(this.minTaskTitleLength), Validators.maxLength(this.maxTaskTitleLength)]);
+
+  minTaskBodyLength = 1;
+  maxTaskBodyLength = 64;
+  taskBody = new FormControl('', [Validators.minLength(this.minTaskBodyLength), Validators.maxLength(this.maxTaskBodyLength)]);
+
+  listId;
 
   constructor(
-   private httpService:HttpService,
-   private router:Router,
-   private route : ActivatedRoute
-  ) { }
+    private httpService: HttpService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+
+  }
 
   ngOnInit() {
 
-    const listId = this.route.snapshot.paramMap.get('listid');
 
-    console.log(listId);
 
-    this.httpService.getList().subscribe(res=>{
+
+    this.httpService.getList().subscribe((res) => {
       this.lists = res;
-      console.log(this.lists);
+
+
+      if (this.lists.length > 0 && this.selectedListId != "") {
+
+        this.httpService.getTasks(this.selectedListId).subscribe(res => {
+
+          this.tasks = res;
+        });
+      }
     });
 
-    this.httpService.getTasks(listId).subscribe(res=>{
-      console.log(res);
-      this.tasks=res;
-    });
+
+
+
   }
 
-  onNewList()
-  {
+  onNewList() {
     var temp;
-    console.log(this.name.value);
-    this.httpService.addNewList(this.name.value).subscribe( resp =>{
+
+    this.httpService.addNewList(this.name.value).subscribe(resp => {
       temp = resp;
-      if(temp.success){
-        
+
+      if (temp.success) {
+
+        this.selectedList = this.name.value;
+
+
+        this.selectedListId = temp.listId;
+
+        this.router.navigate(['todoapp/' + temp.listId]);
+        this.selectList(this.name.value, temp.listId);
       }
     });
   }
 
-  onNewTask(){
+  onNewTask() {
     var temp;
-    console.log(this.taskTitle.value);
-    console.log(this.taskBody.value);
-    this.httpService.addNewTask( this.route.snapshot.paramMap.get('listid'),this.taskTitle.value,this.taskBody.value).subscribe(resp =>{
-      temp = resp;
-      console.log(temp);
-      if(temp.success){
-        this.taskTitle.reset();
-        this.taskBody.reset();
-      }
-    })
+    if (this.selectList) {
+      this.httpService.addNewTask(this.selectedListId, this.taskTitle.value, this.taskBody.value).subscribe(resp => {
+        temp = resp;
+
+        if (temp.success) {
+
+          this.taskTitle.reset();
+          this.taskBody.reset();
+          this.ngOnInit();
+        }
+      })
+    }
   }
 
-  onTaskCheckBox(taskId:string){
-    console.log(taskId);
-    this.httpService.setTaskCompleted(taskId,true).subscribe(res =>{
-      console.log(res);
+  onTaskCheckBox(taskId: string, isCompleted: boolean) {
+
+    //set is completed to inverse
+    this.httpService.setTaskCompleted(taskId, isCompleted ? false : true).subscribe(res => {
+      if (res) {
+
+      }
     });
+  }
+
+  onDelete(taskId: string) {
+    var temp;
+    this.httpService.deleteTask(taskId).subscribe(res => {
+      temp = res;
+      if (temp.success) {
+
+
+        this.ngOnInit();
+      }
+
+
+    });
+  }
+
+  selectList(listName, listId) {
+
+
+    this.selectedList = listName;
+    this.selectedListId = listId;
+    this.ngOnInit();
   }
 
   getErrorMessageName() {

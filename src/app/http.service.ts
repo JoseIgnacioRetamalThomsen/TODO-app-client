@@ -79,4 +79,21 @@ export class HttpService {
 
     return this.http.post('http://localhost:8081/api/settaskcompleted',taskCompleted, httpOptions);
   }
+
+  deleteTask(taskId:string){
+    let httpOptions = {
+      headers: new HttpHeaders({ 'Authorization': this.sessionService.getToken() })
+    };
+    let task = { taskId:taskId}
+    return this.http.delete('http://localhost:8081/api/deletetask/'+taskId,httpOptions);
+  }
+
+  editTask(task){
+    let httpOptions = {
+      headers: new HttpHeaders({ 'Authorization': this.sessionService.getToken() })
+    };
+    
+    return this.http.put('http://localhost:8081/api/updatetask',task,httpOptions);
+
+  }
 }

@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" class="toolbar">
+<mat-toolbar  class="toolbar">
   <span class="title">Todo app</span>
 </mat-toolbar>
 
@@ -45,13 +45,13 @@
 
         <mat-error *ngIf="wrongDataMessage">You've entered an incorrect username/password.</mat-error>
 
-        <button mat-raised-button color="accent" type="submit">Sign In</button>
+        <button mat-raised-button type="submit">Sign In</button>
 
       </form>
 
     </mat-expansion-panel>
 
-    <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+    <mat-expansion-panel >
 
       <mat-expansion-panel-header>
 

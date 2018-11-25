@@ -67,10 +67,9 @@ export class UserLogComponent implements OnInit {
     if (this.email.valid && this.password.valid) {
 
       this.http.signin(this.email.value,this.password.value).subscribe(res=>{
-        console.log(res);
+      
         tempData = res;
 
-        console.log(tempData.success);
 
         if(tempData.success){
 
@@ -95,8 +94,13 @@ export class UserLogComponent implements OnInit {
 
     if (this.email.valid && this.password.valid) {
 
+      var temp
       this.http.addUser(this.email.value,this.password.value).subscribe(res=>{
-        console.log(res);
+        temp=res;
+        if(temp.success){
+
+          window.location.reload();
+        }
       });
       
 

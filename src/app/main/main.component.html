@@ -24,7 +24,7 @@
       </mat-expansion-panel>
 
       <mat-list *ngFor="let list of lists">
-        <a mat-list-item routerLink="/todoapp/{{list._id}}" class="link">
+        <a mat-list-item routerLink="/todoapp/{{list._id}}" class="link" (click)="selectList(list.name,list._id)"><!---->
 
 
           <h4 mat-line>{{list.name}}</h4>
@@ -38,7 +38,7 @@
     </mat-drawer>
 
     <mat-drawer-content>
-
+      <h1>{{selectedList}}</h1>
       <mat-expansion-panel>
         <mat-expansion-panel-header>
           <mat-panel-title>
@@ -67,20 +67,20 @@
 
       <mat-list *ngFor="let task  of tasks">
 
-          <mat-card>
-        <section class="task-container">
-          <div class="task-left">
-            <h2>{{task.taskTitle}}</h2>
-            <h4>{{task.taskBody}}</h4>
+        <mat-card>
+          <section class="task-container">
+            <div class="task-left">
+              <h2>{{task.taskTitle}}</h2>
+              <h4>{{task.taskBody}}</h4>
 
-          </div>
-          <div class="task-righ">
-              <mat-checkbox class="example-margin" [(ngModel)]="task.isCompleted" (click)="onTaskCheckBox(task._id)">Completed</mat-checkbox>
-            <button mat-button color="primary">delete</button>
-          </div>
+            </div>
+            <div class="task-righ">
+              <mat-checkbox class="example-margin" [(ngModel)]="task.isCompleted" (click)="onTaskCheckBox(task._id,task.isCompleted)">Completed</mat-checkbox>
+              <button mat-button color="primary" (click)="onDelete(task._id)">delete</button>
+            </div>
 
-        </section>
-      </mat-card>
+          </section>
+        </mat-card>
       </mat-list>
 
     </mat-drawer-content>
